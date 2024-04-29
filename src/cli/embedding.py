@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
 
 from src.core.modules.models import GoogleEmbedding
-from .settings import load_settings
+from src.core.utils.settings import load_settings
 
 
 def main(

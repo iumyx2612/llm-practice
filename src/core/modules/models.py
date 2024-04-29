@@ -12,10 +12,8 @@ from llama_index.core.base.llms.types import (
 from llama_index.core.llms.callbacks import (
     llm_chat_callback,
     llm_completion_callback)
-from llama_index.llms.openai import OpenAI
 
 import google.generativeai as genai
-from google.ai.generativelanguage import GenerateAnswerRequest
 
 
 class GoogleEmbedding(BaseEmbedding):
