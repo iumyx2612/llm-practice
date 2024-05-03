@@ -7,6 +7,7 @@ from src.core.modules.models import GoogleEmbedding
 from src.core.utils.settings import load_settings
 
 
+# Generate embedding of documents for RAG system
 def main(
         dotenv_path: str,
         document_folder: str = "data",

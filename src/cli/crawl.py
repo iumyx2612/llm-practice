@@ -3,6 +3,8 @@ import typer
 
 from src.core.modules.crawl import save_text_from_wiki
 
+
+# Crawl contents from a wikipedia page using wiki page id
 def main(
         wiki_pageids: list[int],
         save_folder: Path = 'data/'

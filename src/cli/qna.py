@@ -1,6 +1,7 @@
 import typer
 from typing import Optional
 from typing_extensions import Annotated
+from dotenv import load_dotenv
 
 from llama_index.core import (
     StorageContext,
@@ -10,18 +11,19 @@ from llama_index.core import (
 
 from src.core.modules.models import GoogleLLM, GoogleEmbedding
 from src.core.modules.response_synthesizers import google_response_synthesizer
+from src.core.utils.settings import load_settings
 
-DEFAULT_API_KEY = ""
 
-
+# Perform question and answer using RAG system
 def main(
+        dotenv_path: str,
         query: str,
-        api_key: Annotated[Optional[str], typer.Argument()] = None,
         persist_dir: str = "index",
         temp: float = 0.0
 ) -> None:
-    if api_key is None:
-        api_key = DEFAULT_API_KEY
+    load_dotenv(dotenv_path)
+    settings = load_settings()
+    api_key = settings.google_ai.api_key
     llm = GoogleLLM(api_key=api_key, temperature=temp)
     embed_model = GoogleEmbedding(api_key=api_key)
 
