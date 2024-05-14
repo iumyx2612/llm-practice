@@ -14,6 +14,7 @@ from llama_index.core.llms.callbacks import (
     llm_completion_callback)
 
 import google.generativeai as genai
+from google.generativeai.types import ContentsType
 
 
 class GoogleEmbedding(BaseEmbedding):
@@ -144,7 +145,7 @@ class GoogleLLM(LLM):
         raise NotImplementedError("This class does not support streaming chat")
 
     def _complete(
-            self, prompt: str
+            self, prompt: ContentsType
     ) -> CompletionResponse:
         response = self._llm.generate_content(prompt)
         return CompletionResponse(
@@ -162,7 +163,7 @@ class GoogleLLM(LLM):
 
     @llm_completion_callback()
     def complete(
-        self, prompt: str, formatted: bool = False, **kwargs: Any
+        self, prompt: ContentsType, formatted: bool = False, **kwargs: Any
     ) -> CompletionResponse:
         return self._complete(prompt)
 
@@ -204,7 +205,8 @@ class GoogleLLM(LLM):
     ) -> str:
         if self.metadata.is_chat_model:
             output = self.chat(prompt)
+            response = output.message.content
         else:
             output = self.complete(prompt)
-        response = output.text
+            response = output.text
         return response
