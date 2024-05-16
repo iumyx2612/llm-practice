@@ -44,7 +44,7 @@ if __name__ == '__main__':
     )
 
     response = agent.chat("Who is the Japanese singer Yuuri?")
-    # print(response.response)
+    print(response.response)
     # multiply_tool = FunctionTool.from_defaults(fn=multiply)
     # agent = GeminiReAct.from_tools(
     #     [multiply_tool],
