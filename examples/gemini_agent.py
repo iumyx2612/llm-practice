@@ -46,10 +46,6 @@ if __name__ == '__main__':
     response = agent.chat("Who is the Japanese singer Yuuri?")
     # print(response.response)
     # multiply_tool = FunctionTool.from_defaults(fn=multiply)
-    # llm = GoogleLLM(
-    #     api_key="AIzaSyD0CaC8uXelpR53yUeUsXiSmetk-dx2X8s",
-    #     is_chat_model=True
-    # )
     # agent = GeminiReAct.from_tools(
     #     [multiply_tool],
     #     llm=llm,
