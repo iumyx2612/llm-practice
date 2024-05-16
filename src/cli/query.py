@@ -1,6 +1,4 @@
 import typer
-from typing import Optional
-from typing_extensions import Annotated
 from dotenv import load_dotenv
 
 from src.core.modules.models import GoogleLLM

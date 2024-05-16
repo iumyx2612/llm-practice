@@ -1,6 +1,4 @@
 import typer
-from typing import Optional
-from typing_extensions import Annotated
 from dotenv import load_dotenv
 
 from llama_index.core import (
@@ -38,7 +36,7 @@ def main(
         response_synthesizer=google_response_synthesizer(llm=llm)
     )
     response = query_engine.query(query)
-    print(response)
+    print(response.response)
 
 
 if __name__ == '__main__':

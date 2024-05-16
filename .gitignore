@@ -3,3 +3,4 @@ index/
 key
 local.env
 *.pyc
+.ipynb_checkpoints/
