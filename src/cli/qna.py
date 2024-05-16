@@ -1,6 +1,3 @@
-import typer
-from typing import Optional
-from typing_extensions import Annotated
 from dotenv import load_dotenv
 
 from llama_index.core import (
@@ -12,6 +9,7 @@ from llama_index.core import (
 from src.core.modules.models import GoogleLLM, GoogleEmbedding
 from src.core.modules.response_synthesizers import google_response_synthesizer
 from src.core.utils.settings import load_settings
+
 
 
 # Perform question and answer using RAG system
@@ -42,4 +40,4 @@ def main(
 
 
 if __name__ == '__main__':
-    typer.run(main)
+    (main(dotenv_path='C:\\Users\ETC\Documents\maintn\llm-practice\example.env', query='màu của bầu trời'))

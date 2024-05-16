@@ -9,7 +9,7 @@ from src.core.utils.settings import load_settings
 
 # Generate embedding of documents for RAG system
 def main(
-        dotenv_path: str,
+        dotenv_path: str='C:\\Users\ETC\Documents\maintn\llm-practice\example.env',
         document_folder: str = "data",
         persist_dir: str = "index",
         chunk_size: int = 250,
