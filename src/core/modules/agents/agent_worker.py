@@ -5,7 +5,10 @@ from llama_index.core.agent.react.step import (
     TaskStepOutput
 )
 from llama_index.core.base.llms.types import ChatResponse, ChatMessage, MessageRole
+from llama_index.core.utils import print_text
+
 from .prompt_formatter import GoogleChatFormatter
+from src.core.modules.utils import convert_ContentsType_to_str
 
 
 class GeminiReActWorker(ReActAgentWorker):
@@ -35,6 +38,10 @@ class GeminiReActWorker(ReActAgentWorker):
             current_reasoning=task.extra_state["current_reasoning"],
         )
 
+        if self._verbose:
+            print_text(f"> Prompt input to the LLM: \n", color="green")
+            print_text(convert_ContentsType_to_str(input_chat) + '\n', color="green")
+
         # send prompt
         chat_response = self._llm.complete(input_chat)
         # Convert from `CompletionResponse` to `ChatResponse` to fit with _process_actions
@@ -43,6 +50,10 @@ class GeminiReActWorker(ReActAgentWorker):
                 content=chat_response.text
             )
         )
+
+        if self._verbose:
+            print_text("> Reply from the LLM: \n", color="yellow")
+            print_text(f"{str(chat_response.message.content)} \n", color="yellow")
 
         # given react prompt outputs, call tools or return response
         reasoning_steps, is_done = self._process_actions(
