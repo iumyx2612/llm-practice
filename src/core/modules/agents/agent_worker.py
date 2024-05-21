@@ -51,10 +51,6 @@ class GeminiReActWorker(ReActAgentWorker):
             )
         )
 
-        if self._verbose:
-            print_text("> Reply from the LLM: \n", color="yellow")
-            print_text(f"{str(chat_response.message.content)} \n", color="yellow")
-
         # given react prompt outputs, call tools or return response
         reasoning_steps, is_done = self._process_actions(
             task, tools, output=chat_response

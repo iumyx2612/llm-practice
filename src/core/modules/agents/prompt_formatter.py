@@ -14,6 +14,7 @@ from llama_index.core.agent.react.prompts import REACT_CHAT_SYSTEM_HEADER
 from google.generativeai.types import ContentsType, ContentDict
 
 from ..utils import convert_chat_messages_to_ContentsType
+from .prompts import REACT_INTERACTIVE_SYSTEM_HEADER
 
 
 class GoogleChatFormatter(BaseAgentChatFormatter):
