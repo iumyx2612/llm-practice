@@ -1,11 +1,8 @@
 import typer
-from dotenv import load_dotenv
 
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
 
-from src.core.modules.models import GoogleEmbedding
-from src.core.utils.settings import load_settings
-
+from src.core.utils import initialize
 
 # Generate embedding of documents for RAG system
 def main(
@@ -15,12 +12,8 @@ def main(
         chunk_size: int = 250,
         chunk_overlap: int = 50
 ) -> None:
-    load_dotenv(dotenv_path)
-    settings = load_settings()
-    emb_model = GoogleEmbedding(
-        api_key=settings.google_ai.api_key
-    )
-    Settings.embed_model = emb_model
+    initialize(dotenv_path)
+
     documents = SimpleDirectoryReader(
         input_dir=document_folder
     ).load_data()
