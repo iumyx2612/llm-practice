@@ -11,6 +11,15 @@ from src.core.utils.settings import load_settings
 from fastapi import FastAPI
 
 from pydantic import BaseModel
+
+
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+from dotenv import load_dotenv
+import os
+
 '''load_dotenv("C:\\Users\ETC\Documents\maintn\llm-practice\example.env")
 app_settings = load_settings()
 api_key = app_settings.google_ai.api_key
@@ -34,7 +43,7 @@ response = query_engine.query(query)
 print(response)'''
 
 app = FastAPI()
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
 class Query(BaseModel):
     query: str
 
@@ -62,3 +71,8 @@ def predict(data: Query,
         )
         response = query_engine.query(data.query)
         return response
+
+@app.get("/", response_class=HTMLResponse)
+async def read_index():
+    return FileResponse("index.html")
+
