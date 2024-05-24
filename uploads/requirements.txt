@@ -1,0 +1,10 @@
+chardet==5.2.0
+ffmpeg-python
+pika==1.3.2
+lap==0.4.0
+cython_bbox
+xtcocotools
+munkres
+albumentations
+seaborn
+einops

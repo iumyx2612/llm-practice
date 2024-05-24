@@ -8,10 +8,10 @@ from dotenv import load_dotenv
 from src.core.modules.models import GoogleLLM, GoogleEmbedding
 from src.core.modules.response_synthesizers import google_response_synthesizer
 from src.core.utils.settings import load_settings
-from fastapi import FastAPI
+from fastapi import FastAPI,UploadFile, File
 
 from pydantic import BaseModel
-
+import shutil
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, FileResponse
@@ -20,6 +20,10 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
+
+from src.core.modules.models import GoogleEmbedding
+from src.core.utils.settings import load_settings
 '''load_dotenv("C:\\Users\ETC\Documents\maintn\llm-practice\example.env")
 app_settings = load_settings()
 api_key = app_settings.google_ai.api_key
@@ -71,6 +75,47 @@ def predict(data: Query,
         )
         response = query_engine.query(data.query)
         return response
+
+
+@app.post("/upload")
+async def upload_file(file: UploadFile = File(...)):
+    upload_directory = "uploads/"
+    os.makedirs(upload_directory, exist_ok=True)
+    file_location = os.path.join(upload_directory, file.filename)
+
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    embedding(document_folder=upload_directory)
+
+    return {"filename": file.filename}
+
+
+
+
+def embedding(
+        dotenv_path: str='C:\\Users\ETC\Documents\maintn\llm-practice\example.env',
+        document_folder: str = "data",
+        persist_dir: str = "index",
+        chunk_size: int = 250,
+        chunk_overlap: int = 50
+) -> None:
+    load_dotenv(dotenv_path)
+    settings = load_settings()
+    emb_model = GoogleEmbedding(
+        api_key=settings.google_ai.api_key
+    )
+    Settings.embed_model = emb_model
+    documents = SimpleDirectoryReader(
+        input_dir=document_folder
+    ).load_data()
+    index = VectorStoreIndex.from_documents(
+        documents,
+        show_progress=True,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap
+    )
+    index.storage_context.persist(persist_dir=persist_dir)
+
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index():

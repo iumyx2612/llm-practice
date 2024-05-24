@@ -14,8 +14,13 @@
             <input type="text" id="query-input" name="query" required>
             <button type="submit">Submit</button>
         </form>
-        <div id="response" class="response"></div>
-    </div>
+            <div id="response" class="response"></div>
+
+        <form id="upload-form" enctype="multipart/form-data">
+            <label for="file-input">Upload a file:</label>
+            <input type="file" id="file-input" name="file" required>
+            <button type="submit">Upload</button>
+
     <script src="/static/scripts.js"></script>
 </body>
 </html>
