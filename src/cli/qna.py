@@ -13,7 +13,8 @@ from src.core.utils import initialize
 def main(
         dotenv_path: str,
         query: str,
-        persist_dir: str = "index"
+        persist_dir: str = "index",
+        top_k: int = 4
 ) -> None:
     initialize(dotenv_path)
 
@@ -22,7 +23,8 @@ def main(
     )
     index = load_index_from_storage(storage_context)
     query_engine = index.as_query_engine(
-        response_synthesizer=google_response_synthesizer()
+        response_synthesizer=google_response_synthesizer(),
+        similarity_top_k=top_k
     )
     response = query_engine.query(query)
     print(response.response)

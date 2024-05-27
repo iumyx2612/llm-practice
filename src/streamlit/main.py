@@ -1,52 +1,33 @@
 import streamlit as st
 
-from dotenv import load_dotenv
-
 from llama_index.core import (
     StorageContext,
-    load_index_from_storage,
-    Settings
+    load_index_from_storage
 )
 
-from src.core.modules.models import GoogleLLM, GoogleEmbedding
 from src.core.modules.response_synthesizers import google_response_synthesizer
-from src.core.utils.settings import (
-    load_settings,
-    Settings as AppSettings
-)
+from src.core.utils import initialize
 
 
 def main(env_path: str):
-    load_dotenv(env_path)
-    app_settings = load_settings()
+    initialize(env_path)
 
     with st.sidebar:
-        temperature = st.slider(
-            label="Temperature",
-            max_value=1.0,
-            min_value=0.0,
-            step=0.1
+        top_k = st.slider(
+            label="Top-k documents",
+            max_value=4,
+            min_value=1,
+            step=1
         )
 
-    embed_model = GoogleEmbedding(
-        api_key=app_settings.google_ai.api_key,
-        model_name=app_settings.google_ai.emb_model_name
-    )
-    llm = GoogleLLM(
-        api_key=app_settings.google_ai.api_key,
-        model=app_settings.google_ai.llm_model_name,
-        temperature=temperature
-    )
-
-    Settings.embed_model = embed_model
-    Settings.llm = llm
 
     storage_context = StorageContext.from_defaults(
         persist_dir="index/"
     )
     index = load_index_from_storage(storage_context)
     query_engine = index.as_query_engine(
-        response_synthesizer=google_response_synthesizer(llm=llm)
+        response_synthesizer=google_response_synthesizer(),
+        similarity_top_k=top_k
     )
 
     with st.chat_message("user"):
@@ -55,7 +36,7 @@ def main(env_path: str):
     with st.chat_message("ai"):
         if query:
             response = query_engine.query(query)
-            st.write(response)
+            st.write(response.response)
 
 
 if __name__ == '__main__':
