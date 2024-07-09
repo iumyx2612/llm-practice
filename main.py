@@ -24,27 +24,7 @@ from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, Settings
 
 from src.core.modules.models import GoogleEmbedding
 from src.core.utils.settings import load_settings
-'''load_dotenv("C:\\Users\ETC\Documents\maintn\llm-practice\example.env")
-app_settings = load_settings()
-api_key = app_settings.google_ai.api_key
-query = "Hello"
 
-
-llm = GoogleLLM(api_key=api_key, temperature=0.0)
-embed_model = GoogleEmbedding(api_key=api_key)
-
-Settings.llm = llm
-Settings.embed_model = embed_model
-
-storage_context = StorageContext.from_defaults(
-    persist_dir="index"
-)
-index = load_index_from_storage(storage_context)
-query_engine = index.as_query_engine(
-    response_synthesizer=google_response_synthesizer(llm=llm)
-)
-response = query_engine.query(query)
-print(response)'''
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -90,8 +70,6 @@ async def upload_file(file: UploadFile = File(...)):
     return {"filename": file.filename}
 
 
-
-
 def embedding(
         dotenv_path: str='C:\\Users\ETC\Documents\maintn\llm-practice\example.env',
         document_folder: str = "data",
@@ -114,7 +92,42 @@ def embedding(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap
     )
-    index.storage_context.persist(persist_dir=persist_dir)
+    #index.storage_context.persist(persist_dir=persist_dir)
+    storage_context = StorageContext.from_defaults(
+        persist_dir=persist_dir
+    )
+    index_previous = load_index_from_storage(storage_context)
+    print(index_previous)
+
+
+def add_embedding( dotenv_path: str='C:\\Users\ETC\Documents\maintn\llm-practice\example.env',
+        document_folder: str = "data",
+        persist_dir: str = "index",
+        chunk_size: int = 250,
+        chunk_overlap: int = 50):
+    load_dotenv(dotenv_path)
+    settings = load_settings()
+    emb_model = GoogleEmbedding(
+        api_key=settings.google_ai.api_key
+    )
+    Settings.embed_model = emb_model
+    documents = SimpleDirectoryReader(
+        input_dir=document_folder
+    ).load_data()
+    index = VectorStoreIndex.from_documents(
+        documents,
+        show_progress=True,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap
+    )
+    #index.storage_context.persist(persist_dir=persist_dir)
+    storage_context = StorageContext.from_defaults(
+        persist_dir=persist_dir
+    )
+    index_previous = load_index_from_storage(storage_context)
+    print(index_previous)
+
+
 
 
 @app.get("/", response_class=HTMLResponse)

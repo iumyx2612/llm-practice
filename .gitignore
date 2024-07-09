@@ -2,4 +2,5 @@
 index/
 key
 local.env
+example.env
 *.pyc

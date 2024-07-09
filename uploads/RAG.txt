@@ -1,0 +1,25 @@
+chunking là quá trình chia nhỏ promts hoặc documents thành nhiều chunks hoặc gọi là segments nhỏ hơn nhưng vẫn có ý nghĩa
+- các chunks có thể được cắt theo kích thước cố định, như số lượng ký tự, câu hoặc đoạn văn cụ thể 
+- trong RAG mỗi chunk được mã hóa thành 1 vector embedding để retrieval.
+- Phân tách các chunks đủ nhỏ và chính xác giúp câu truy vấn của user và nội dung chunk chính xác hơn 
+- khi chọn size chunks quá lớn có thể bao gốm nhiều thông tin ko chính xác gây nhiêu
+=> khi thực hiện chunks dữ liệu cần kiểm soát kích thước của các chunks  để RAG cân bằng được giữa lượng thông tin đầy đủ và tính chính xác
+
+2. Embedding
+Embedding documents là biến đổi từ dữ liệu thanh một không gian vector có thể so sánh về mức độ liên quan giữa chúng 
+ - sparse embedding: chi phí tính toán thấp 
+ - semantic embedding: khả năng nắm bắt ngữ nghĩa tốt, cung cấp embedding cho từng token(words or subwords0
+
+3. vector database
+- database truyền thống stores strings, numbers, and other types of scalar data in rows and columns 
+- sử dụng similarity metric để tìm vector có độ tương đồng lớn nhất với câu query 
+- trade of betweenn accuracy and speed 
+
+4. Indexing techique
+5. Similirity measure
+similirity mesures determining how similar vectors are in a vector sapce => using to compare vector store in a vector database and the most similar 
+
+- Cosine similarity:  mesure cosine angle between tow vector in vector space. (-1,1). if score ==1 
+- Euclidean distance: measure straight-line distance betweebn two vectort
+- Dot product similarity: measures the product of the magnitudes of two vectors and the cosine of the angle between them. It ranges from -∞ to ∞, 
+where a positive value represents vectors that point in the same direction, 
