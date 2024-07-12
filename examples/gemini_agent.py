@@ -46,7 +46,7 @@ def ask_for_more_information(question: str) -> str:
 
 
 if __name__ == '__main__':
-    load_dotenv("../local.env")
+    load_dotenv("local.env")
     settings = load_settings()
 
     search_tool = FunctionTool.from_defaults(fn=search_info_from_wikipedia)
