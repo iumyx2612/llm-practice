@@ -32,7 +32,7 @@ class Query(BaseModel):
     query: str
 
 
-GOOGLE_API_KEY = "AIzaSyCXn7vCgVa7hmfGlRYr-Dn71zw_VsKp51g"  # add your GOOGLE API key here
+GOOGLE_API_KEY = ""  # add your GOOGLE API key here
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 
 from llama_index.llms.gemini import Gemini
