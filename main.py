@@ -4,6 +4,7 @@ from llama_index.core import (
     Settings
 )
 from dotenv import load_dotenv
+from llama_index.core.node_parser import SimpleNodeParser
 
 from src.core.modules.models import GoogleLLM, GoogleEmbedding
 from src.core.modules.response_synthesizers import google_response_synthesizer
@@ -54,7 +55,7 @@ class Query(BaseModel):
 
 @app.post('/predict')
 def predict(data: Query,
-            dotenv_path: str = "C:\\Users\ETC\Documents\maintn\llm-practice\example.env",
+            dotenv_path: str = "D:\Work\llm-practice\example.env",
             #query: str,
             persist_dir: str = "index",
             temp: float = 0.0):
@@ -85,7 +86,7 @@ async def upload_file(file: UploadFile = File(...)):
 
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-    embedding(document_folder=upload_directory)
+    add_document(document_folder=upload_directory)
 
     return {"filename": file.filename}
 
@@ -93,7 +94,7 @@ async def upload_file(file: UploadFile = File(...)):
 
 
 def embedding(
-        dotenv_path: str='C:\\Users\ETC\Documents\maintn\llm-practice\example.env',
+        dotenv_path: str='D:\Work\llm-practice\example.env',
         document_folder: str = "data",
         persist_dir: str = "index",
         chunk_size: int = 250,
@@ -115,6 +116,35 @@ def embedding(
         chunk_overlap=chunk_overlap
     )
     index.storage_context.persist(persist_dir=persist_dir)
+
+def add_document(
+        dotenv_path: str='D:\Work\llm-practice\example.env',
+        document_folder: str = "data",
+        persist_dir: str = "index",
+        chunk_size: int = 250,
+        chunk_overlap: int = 50
+) -> None:
+    load_dotenv(dotenv_path)
+    settings = load_settings()
+    emb_model = GoogleEmbedding(
+        api_key=settings.google_ai.api_key
+    )
+    Settings.embed_model = emb_model
+    
+    storage_context = StorageContext.from_defaults(persist_dir=persist_dir)
+    index = load_index_from_storage(storage_context)
+
+    # Load new documents
+    print("Loading new documents...")
+    new_documents = SimpleDirectoryReader(document_folder).load_data()
+
+    # Parse documents into nodes
+    print("Parsing new documents into nodes...")
+    for doc in new_documents:
+        index.insert(doc)
+        # Persist the index after inserting the new document
+        index.storage_context.persist(persist_dir)
+
 
 
 @app.get("/", response_class=HTMLResponse)
